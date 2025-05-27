@@ -1,3 +1,4 @@
+```tsx
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 
@@ -11,14 +12,27 @@ export function StartWindow() {
           Welcome to UNI AI
         </h1>
         
-        <Button 
-          size="lg"
-          onClick={() => navigate("/chat")}
-          className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700"
-        >
-          Start Chatting
-        </Button>
+        <div className="space-y-4">
+          <Button 
+            size="lg"
+            onClick={() => navigate("/chat")}
+            className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700"
+          >
+            Start as Guest
+          </Button>
+          
+          <div>
+            <Button
+              variant="outline"
+              size="lg"
+              onClick={() => navigate("/login")}
+            >
+              Sign in
+            </Button>
+          </div>
+        </div>
       </div>
     </div>
   );
 }
+```
