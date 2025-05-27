@@ -8,7 +8,7 @@ export function StartWindow() {
     <div className="min-h-screen flex flex-col">      
       <div className="flex-1 flex flex-col items-center justify-center px-4 text-center">
         <h1 className="text-4xl font-bold mb-4 bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
-          Welcome to AI Chat Assistant
+          Welcome to UNI AI
         </h1>
         
         <Button 

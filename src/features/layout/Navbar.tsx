@@ -14,7 +14,7 @@ export function Navbar() {
     <nav className="border-b">
       <div className="flex h-16 items-center px-4 max-w-7xl mx-auto">
         <Link to="/" className="font-semibold text-lg">
-          AI Chat Assistant
+          UNI AI
         </Link>
         
         <div className="ml-auto flex items-center space-x-4">
