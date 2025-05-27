@@ -23,10 +23,10 @@ export function StartWindow() {
         
         <Button 
           size="lg"
-          onClick={() => navigate("/login")}
+          onClick={() => navigate("/chat")}
           className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700"
         >
-          Get Started
+          Start Chatting
         </Button>
       </div>
     </div>
