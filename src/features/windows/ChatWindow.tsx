@@ -2,6 +2,9 @@ import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Send } from "lucide-react";
+import { n8nService } from "@/utils/n8nService";
+import { useToast } from "@/hooks/use-toast";
+import N8nConfigDialog from "@/components/N8nConfigDialog";
 
 interface Message {
   id: string;
@@ -22,6 +25,7 @@ export function ChatWindow() {
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const { toast } = useToast();
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -34,6 +38,15 @@ export function ChatWindow() {
   const handleSubmit = async () => {
     if (!input.trim() || isLoading) return;
 
+    if (!n8nService.getWebhookUrl()) {
+      toast({
+        title: "n8n is not configured",
+        description: "Please configure the n8n webhook from the settings button",
+        variant: "destructive",
+      });
+      return;
+    }
+
     const userMessage: Message = {
       id: Date.now().toString(),
       content: input.trim(),
@@ -45,18 +58,27 @@ export function ChatWindow() {
     setInput("");
     setIsLoading(true);
 
-    // Simulate AI response
-    setTimeout(() => {
+    try {
+      const response = await n8nService.sendQuestionToN8n(input.trim());
+      
       const aiMessage: Message = {
         id: (Date.now() + 1).toString(),
-        content: "I understand your message. This is a simulated response. In a real implementation, this would be connected to an AI service.",
+        content: response,
         isUser: false,
         timestamp: new Date()
       };
-      
+
       setMessages(prev => [...prev, aiMessage]);
+    } catch (error) {
+      console.error('Error getting n8n response:', error);
+      toast({
+        title: "Error",
+        description: error.message,
+        variant: "destructive",
+      });
+    } finally {
       setIsLoading(false);
-    }, 1000);
+    }
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -69,6 +91,11 @@ export function ChatWindow() {
   return (
     <div className="container max-w-4xl mx-auto p-4 h-[calc(100vh-4rem)]">
       <div className="flex flex-col h-full bg-card rounded-lg border shadow-lg">
+        <div className="p-4 border-b flex justify-between items-center">
+          <h2 className="font-semibold">Chat Assistant</h2>
+          <N8nConfigDialog />
+        </div>
+        
         <div className="flex-1 overflow-y-auto p-4 space-y-4">
           {messages.map((message) => (
             <div
