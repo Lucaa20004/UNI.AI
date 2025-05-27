@@ -11,7 +11,8 @@ import { LoginForm } from "@/components/auth/LoginForm";
 import { SignUpForm } from "@/components/auth/SignUpForm";
 import { ProfilePage } from "@/features/profile/ProfilePage";
 import { SubscriptionsPage } from "@/features/subscriptions/SubscriptionsPage";
-import Index from "./pages/Index";
+import { StartWindow } from "@/features/windows/StartWindow";
+import { ChatWindow } from "@/features/windows/ChatWindow";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -27,9 +28,14 @@ const App = () => (
             <div className="min-h-screen bg-background text-foreground">
               <Navbar />
               <Routes>
-                <Route path="/" element={<Index />} />
+                <Route path="/" element={<StartWindow />} />
                 <Route path="/login" element={<LoginForm />} />
                 <Route path="/signup" element={<SignUpForm />} />
+                <Route path="/chat" element={
+                  <ProtectedRoute>
+                    <ChatWindow />
+                  </ProtectedRoute>
+                } />
                 <Route path="/profile" element={
                   <ProtectedRoute>
                     <ProfilePage />
