@@ -9,13 +9,18 @@ interface ProtectedRouteProps {
 }
 
 export function ProtectedRoute({ children, requiredRole }: ProtectedRouteProps) {
-  const { user, profile, loading } = useAuthContext();
+  const { user, profile, loading, isGuest } = useAuthContext();
 
   if (loading) {
     return <div>Loading...</div>;
   }
 
-  if (!user) {
+  // Allow guest access if no specific role is required
+  if (isGuest && !requiredRole) {
+    return <>{children}</>;
+  }
+
+  if (!user && !isGuest) {
     return <Navigate to="/login" />;
   }
 

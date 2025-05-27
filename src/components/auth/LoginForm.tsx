@@ -13,7 +13,7 @@ interface LoginFormData {
 }
 
 export function LoginForm() {
-  const { signIn, signInWithGoogle } = useAuthContext();
+  const { signIn, signInWithGoogle, continueAsGuest } = useAuthContext();
   const [isLoading, setIsLoading] = useState(false);
   const { register, handleSubmit, formState: { errors } } = useForm<LoginFormData>();
 
@@ -71,15 +71,27 @@ export function LoginForm() {
           </div>
         </div>
 
-        <Button
-          type="button"
-          variant="outline"
-          className="w-full"
-          onClick={signInWithGoogle}
-          disabled={isLoading}
-        >
-          Continue with Google
-        </Button>
+        <div className="space-y-2">
+          <Button
+            type="button"
+            variant="outline"
+            className="w-full"
+            onClick={signInWithGoogle}
+            disabled={isLoading}
+          >
+            Continue with Google
+          </Button>
+
+          <Button
+            type="button"
+            variant="outline"
+            className="w-full"
+            onClick={continueAsGuest}
+            disabled={isLoading}
+          >
+            Continue as Guest
+          </Button>
+        </div>
       </CardContent>
       <CardFooter className="flex justify-center">
         <p className="text-sm text-muted-foreground">

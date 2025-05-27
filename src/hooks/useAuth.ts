@@ -17,16 +17,19 @@ interface UseAuthReturn {
   user: User | null;
   profile: Profile | null;
   loading: boolean;
+  isGuest: boolean;
   signIn: (email: string, password: string) => Promise<void>;
   signUp: (email: string, password: string) => Promise<void>;
   signOut: () => Promise<void>;
   signInWithGoogle: () => Promise<void>;
+  continueAsGuest: () => void;
 }
 
 export function useAuth(): UseAuthReturn {
   const [user, setUser] = useState<User | null>(null);
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
+  const [isGuest, setIsGuest] = useState(localStorage.getItem('isGuest') === 'true');
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -36,6 +39,8 @@ export function useAuth(): UseAuthReturn {
       setUser(session?.user ?? null);
       if (session?.user) {
         fetchProfile(session.user.id);
+        setIsGuest(false);
+        localStorage.removeItem('isGuest');
       }
       setLoading(false);
     });
@@ -45,6 +50,8 @@ export function useAuth(): UseAuthReturn {
       setUser(session?.user ?? null);
       if (session?.user) {
         fetchProfile(session.user.id);
+        setIsGuest(false);
+        localStorage.removeItem('isGuest');
       } else {
         setProfile(null);
       }
@@ -83,7 +90,7 @@ export function useAuth(): UseAuthReturn {
         password,
       });
       if (error) throw error;
-      navigate('/');
+      navigate('/chat');
     } catch (error) {
       console.error('Sign in error:', error);
       toast({
@@ -120,6 +127,8 @@ export function useAuth(): UseAuthReturn {
     try {
       const { error } = await supabase.auth.signOut();
       if (error) throw error;
+      setIsGuest(false);
+      localStorage.removeItem('isGuest');
       navigate('/login');
     } catch (error) {
       console.error('Sign out error:', error);
@@ -147,13 +156,21 @@ export function useAuth(): UseAuthReturn {
     }
   };
 
+  const continueAsGuest = () => {
+    setIsGuest(true);
+    localStorage.setItem('isGuest', 'true');
+    navigate('/chat');
+  };
+
   return {
     user,
     profile,
     loading,
+    isGuest,
     signIn,
     signUp,
     signOut,
     signInWithGoogle,
+    continueAsGuest,
   };
 }
