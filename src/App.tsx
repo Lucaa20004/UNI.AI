@@ -34,7 +34,7 @@ const App = () => (
                     <>
                       <Navbar />
                       <Routes>
-                        <Route path="/login" element={<LoginForm />} />
+                        <Route path="/login\" element={<LoginForm />} />
                         <Route path="/signup" element={<SignUpForm />} />
                         <Route path="/chat" element={
                           <ProtectedRoute>
