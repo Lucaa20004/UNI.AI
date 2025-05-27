@@ -38,7 +38,8 @@ export function ChatWindow() {
   const handleSubmit = async () => {
     if (!input.trim() || isLoading) return;
 
-    if (!n8nService.getWebhookUrl()) {
+    const webhookUrl = n8nService.getWebhookUrl();
+    if (!webhookUrl) {
       toast({
         title: "n8n is not configured",
         description: "Please configure the n8n webhook from the settings button",
@@ -72,8 +73,8 @@ export function ChatWindow() {
     } catch (error) {
       console.error('Error getting n8n response:', error);
       toast({
-        title: "Error",
-        description: error.message,
+        title: "n8n Connection Error",
+        description: error.message || "Failed to connect to n8n webhook. Please check your configuration.",
         variant: "destructive",
       });
     } finally {

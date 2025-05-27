@@ -30,6 +30,13 @@ export class N8nService {
     }
 
     try {
+      // Validate URL before making the request
+      try {
+        new URL(this.webhookUrl);
+      } catch (e) {
+        throw new Error('Invalid n8n webhook URL. Please check your configuration.');
+      }
+
       const response = await fetch(this.webhookUrl, {
         method: 'POST',
         headers: {
@@ -41,14 +48,20 @@ export class N8nService {
       });
 
       if (!response.ok) {
-        throw new Error(`n8n webhook responded with status: ${response.status}`);
+        throw new Error(`n8n webhook error: ${response.status} ${response.statusText}`);
       }
 
       const data = await response.json();
-      return data.output || 'Did not receive a valid response.';
+      if (!data || !data.output) {
+        throw new Error('Invalid response format from n8n webhook');
+      }
+
+      return data.output;
 
     } catch (error) {
-      console.error('Error calling n8n webhook:', error);
+      if (error instanceof TypeError && error.message === 'Failed to fetch') {
+        throw new Error('Unable to connect to n8n webhook. Please check if the URL is correct and accessible.');
+      }
       throw error;
     }
   }
