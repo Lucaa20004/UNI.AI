@@ -12,7 +12,7 @@ import { SignUpForm } from "@/components/auth/SignUpForm";
 import { ChatWindow } from "@/features/windows/ChatWindow";
 import { ProfilePage } from "@/features/profile/ProfilePage";
 import { SubscriptionsPage } from "@/features/subscriptions/SubscriptionsPage";
-import { NotFound } from "@/pages/NotFound";
+import NotFound from "@/pages/NotFound";
 
 const queryClient = new QueryClient();
 
