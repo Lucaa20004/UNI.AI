@@ -17,18 +17,8 @@ export function StartWindow() {
             onClick={() => navigate("/chat")}
             className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700"
           >
-            Start as Guest
+            Start Chat
           </Button>
-          
-          <div>
-            <Button
-              variant="outline"
-              size="lg"
-              onClick={() => navigate("/login")}
-            >
-              Sign in
-            </Button>
-          </div>
         </div>
       </div>
     </div>

@@ -9,10 +9,6 @@ import { ChatWindow } from "@/features/windows/ChatWindow";
 import { ProfileWindow } from "@/features/windows/ProfileWindow";
 import { SettingsWindow } from "@/features/windows/SettingsWindow";
 import { SubscriptionWindow } from "@/features/windows/SubscriptionWindow";
-import { LoginForm } from "@/components/auth/LoginForm";
-import { SignUpForm } from "@/components/auth/SignUpForm";
-import { AuthProvider } from "@/components/auth/AuthContext";
-import ErrorBoundary from "@/components/ErrorBoundary";
 import NotFound from "@/pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -24,23 +20,17 @@ function App() {
         <TooltipProvider>
           <Toaster />
           <BrowserRouter>
-            <ErrorBoundary>
-              <AuthProvider>
-                <div className="min-h-screen bg-background text-foreground">
-                  <Navbar />
-                  <Routes>
-                    <Route path="/" element={<StartWindow />} />
-                    <Route path="/login" element={<LoginForm />} />
-                    <Route path="/signup" element={<SignUpForm />} />
-                    <Route path="/chat" element={<ChatWindow />} />
-                    <Route path="/profile" element={<ProfileWindow />} />
-                    <Route path="/settings" element={<SettingsWindow />} />
-                    <Route path="/subscription" element={<SubscriptionWindow />} />
-                    <Route path="*" element={<NotFound />} />
-                  </Routes>
-                </div>
-              </AuthProvider>
-            </ErrorBoundary>
+            <div className="min-h-screen bg-background text-foreground">
+              <Navbar />
+              <Routes>
+                <Route path="/" element={<StartWindow />} />
+                <Route path="/chat" element={<ChatWindow />} />
+                <Route path="/profile" element={<ProfileWindow />} />
+                <Route path="/settings" element={<SettingsWindow />} />
+                <Route path="/subscription" element={<SubscriptionWindow />} />
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </div>
           </BrowserRouter>
         </TooltipProvider>
       </ThemeProvider>
