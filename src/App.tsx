@@ -10,6 +10,7 @@ import { ProfileWindow } from "@/features/windows/ProfileWindow";
 import { SettingsWindow } from "@/features/windows/SettingsWindow";
 import { SubscriptionWindow } from "@/features/windows/SubscriptionWindow";
 import { LoginForm } from "@/components/auth/LoginForm";
+import { SignUpForm } from "@/components/auth/SignUpForm";
 import { AuthProvider } from "@/components/auth/AuthContext";
 import NotFound from "@/pages/NotFound";
 
@@ -28,6 +29,7 @@ function App() {
                 <Routes>
                   <Route path="/" element={<StartWindow />} />
                   <Route path="/login" element={<LoginForm />} />
+                  <Route path="/signup" element={<SignUpForm />} />
                   <Route path="/chat" element={<ChatWindow />} />
                   <Route path="/profile" element={<ProfileWindow />} />
                   <Route path="/settings" element={<SettingsWindow />} />
