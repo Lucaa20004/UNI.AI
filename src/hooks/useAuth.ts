@@ -9,8 +9,10 @@ export type UserRole = 'user' | 'admin';
 interface Profile {
   id: string;
   role: UserRole;
+  username: string | null;
   updated_at: string;
   created_at: string;
+  is_guest: boolean;
 }
 
 interface UseAuthReturn {
@@ -33,8 +35,22 @@ export function useAuth(): UseAuthReturn {
   const navigate = useNavigate();
   const { toast } = useToast();
 
+  // Test Supabase connection on initialization
   useEffect(() => {
-    // Get initial session
+    supabase.from('profiles').select('*').limit(1)
+      .then(({ error }) => {
+        if (error) {
+          console.error("Supabase connection failed:", error);
+          toast({
+            title: "Connection Error",
+            description: "Failed to connect to Supabase",
+            variant: "destructive",
+          });
+        }
+      });
+  }, []);
+
+  useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setUser(session?.user ?? null);
       if (session?.user) {
@@ -45,7 +61,6 @@ export function useAuth(): UseAuthReturn {
       setLoading(false);
     });
 
-    // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setUser(session?.user ?? null);
       if (session?.user) {
@@ -69,9 +84,24 @@ export function useAuth(): UseAuthReturn {
         .from('profiles')
         .select('*')
         .eq('id', userId)
-        .single();
+        .maybeSingle();
 
       if (error) throw error;
+
+      if (!data) {
+        // Create profile if it doesn't exist
+        const { error: insertError } = await supabase
+          .from('profiles')
+          .insert([{
+            id: userId,
+            role: 'user',
+            is_guest: false
+          }]);
+
+        if (insertError) throw insertError;
+        return fetchProfile(userId); // Retry after creation
+      }
+
       setProfile(data);
     } catch (error) {
       console.error('Error fetching profile:', error);
@@ -156,7 +186,19 @@ export function useAuth(): UseAuthReturn {
     }
   };
 
-  const continueAsGuest = () => {
+  const continueAsGuest = async () => {
+    if (user) {
+      try {
+        const { error } = await supabase
+          .from('profiles')
+          .update({ is_guest: true })
+          .eq('id', user.id);
+        
+        if (error) throw error;
+      } catch (error) {
+        console.error('Error updating guest status:', error);
+      }
+    }
     setIsGuest(true);
     localStorage.setItem('isGuest', 'true');
     navigate('/chat');
