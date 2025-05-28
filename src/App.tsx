@@ -10,6 +10,7 @@ import { ProfileWindow } from "@/features/windows/ProfileWindow";
 import { SettingsWindow } from "@/features/windows/SettingsWindow";
 import { SubscriptionWindow } from "@/features/windows/SubscriptionWindow";
 import { LoginForm } from "@/components/auth/LoginForm";
+import { AuthProvider } from "@/components/auth/AuthContext";
 import NotFound from "@/pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -20,20 +21,22 @@ function App() {
       <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
         <TooltipProvider>
           <Toaster />
-          <BrowserRouter>
-            <div className="min-h-screen bg-background text-foreground">
-              <Navbar />
-              <Routes>
-                <Route path="/" element={<StartWindow />} />
-                <Route path="/login" element={<LoginForm />} />
-                <Route path="/chat" element={<ChatWindow />} />
-                <Route path="/profile" element={<ProfileWindow />} />
-                <Route path="/settings" element={<SettingsWindow />} />
-                <Route path="/subscription" element={<SubscriptionWindow />} />
-                <Route path="*" element={<NotFound />} />
-              </Routes>
-            </div>
-          </BrowserRouter>
+          <AuthProvider>
+            <BrowserRouter>
+              <div className="min-h-screen bg-background text-foreground">
+                <Navbar />
+                <Routes>
+                  <Route path="/" element={<StartWindow />} />
+                  <Route path="/login" element={<LoginForm />} />
+                  <Route path="/chat" element={<ChatWindow />} />
+                  <Route path="/profile" element={<ProfileWindow />} />
+                  <Route path="/settings" element={<SettingsWindow />} />
+                  <Route path="/subscription" element={<SubscriptionWindow />} />
+                  <Route path="*" element={<NotFound />} />
+                </Routes>
+              </div>
+            </BrowserRouter>
+          </AuthProvider>
         </TooltipProvider>
       </ThemeProvider>
     </QueryClientProvider>
