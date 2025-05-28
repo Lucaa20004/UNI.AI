@@ -9,6 +9,7 @@ import { ChatWindow } from "@/features/windows/ChatWindow";
 import { ProfileWindow } from "@/features/windows/ProfileWindow";
 import { SettingsWindow } from "@/features/windows/SettingsWindow";
 import { SubscriptionWindow } from "@/features/windows/SubscriptionWindow";
+import { LoginForm } from "@/components/auth/LoginForm";
 import NotFound from "@/pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -24,6 +25,7 @@ function App() {
               <Navbar />
               <Routes>
                 <Route path="/" element={<StartWindow />} />
+                <Route path="/login" element={<LoginForm />} />
                 <Route path="/chat" element={<ChatWindow />} />
                 <Route path="/profile" element={<ProfileWindow />} />
                 <Route path="/settings" element={<SettingsWindow />} />
