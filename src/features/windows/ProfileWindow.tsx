@@ -12,8 +12,6 @@ import { Navigate } from "react-router-dom";
 interface Profile {
   id: string;
   username: string | null;
-  full_name: string | null;
-  avatar_url: string | null;
   role: string | null;
   created_at: string;
 }
@@ -24,10 +22,7 @@ export function ProfileWindow() {
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
-  const [formData, setFormData] = useState({
-    username: "",
-    full_name: ""
-  });
+  const [username, setUsername] = useState("");
   const { toast } = useToast();
 
   useEffect(() => {
@@ -46,10 +41,7 @@ export function ProfileWindow() {
 
         if (error) throw error;
         setProfile(data);
-        setFormData({
-          username: data?.username || "",
-          full_name: data?.full_name || user.user_metadata.full_name || ""
-        });
+        setUsername(data?.username || "");
       } catch (error) {
         console.error('Error fetching profile:', error);
         toast({
@@ -72,20 +64,12 @@ export function ProfileWindow() {
       const { error } = await supabase
         .from('profiles')
         .update({
-          username: formData.username,
-          full_name: formData.full_name,
+          username: username,
           updated_at: new Date().toISOString()
         })
         .eq('id', user.id);
 
       if (error) throw error;
-
-      // Update user metadata
-      const { error: updateError } = await supabase.auth.updateUser({
-        data: { full_name: formData.full_name }
-      });
-
-      if (updateError) throw updateError;
 
       toast({
         title: "Success",
@@ -169,31 +153,11 @@ export function ProfileWindow() {
           {isEditing ? (
             <div className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
-                <Input value={user.email} disabled />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="full_name">Full Name</Label>
-                <Input
-                  id="full_name"
-                  value={formData.full_name}
-                  onChange={(e) => setFormData(prev => ({
-                    ...prev,
-                    full_name: e.target.value
-                  }))}
-                />
-              </div>
-
-              <div className="space-y-2">
                 <Label htmlFor="username">Username</Label>
                 <Input
                   id="username"
-                  value={formData.username}
-                  onChange={(e) => setFormData(prev => ({
-                    ...prev,
-                    username: e.target.value
-                  }))}
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
                 />
               </div>
 
@@ -205,10 +169,7 @@ export function ProfileWindow() {
                   variant="outline" 
                   onClick={() => {
                     setIsEditing(false);
-                    setFormData({
-                      username: profile?.username || "",
-                      full_name: profile?.full_name || user.user_metadata.full_name || ""
-                    });
+                    setUsername(profile?.username || "");
                   }}
                 >
                   Cancel
@@ -217,16 +178,6 @@ export function ProfileWindow() {
             </div>
           ) : (
             <>
-              <div className="space-y-2">
-                <Label>Email</Label>
-                <p className="text-sm">{user.email}</p>
-              </div>
-
-              <div className="space-y-2">
-                <Label>Full Name</Label>
-                <p className="text-sm">{profile?.full_name || user.user_metadata.full_name || 'Not provided'}</p>
-              </div>
-
               <div className="space-y-2">
                 <Label>Username</Label>
                 <p className="text-sm">{profile?.username || 'Not set'}</p>
@@ -238,20 +189,11 @@ export function ProfileWindow() {
               </div>
 
               <div className="space-y-2">
-                <Label>Account Created</Label>
+                <Label>Profile Created</Label>
                 <p className="text-sm">
-                  {new Date(user.created_at).toLocaleDateString()}
+                  {profile?.created_at ? new Date(profile.created_at).toLocaleDateString() : 'Not available'}
                 </p>
               </div>
-
-              {profile?.created_at && (
-                <div className="space-y-2">
-                  <Label>Profile Updated</Label>
-                  <p className="text-sm">
-                    {new Date(profile.created_at).toLocaleDateString()}
-                  </p>
-                </div>
-              )}
             </>
           )}
         </CardContent>
