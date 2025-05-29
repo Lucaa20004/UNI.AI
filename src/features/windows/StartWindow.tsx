@@ -17,7 +17,7 @@ export function StartWindow() {
     }
   };
 
-  // Refs for sections and elements
+  // Refs for sections
   const whatIsRef = useRef(null);
   const whyUseRef = useRef(null);
   const screenshotRef = useRef(null);
@@ -27,19 +27,37 @@ export function StartWindow() {
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            // Add animation classes to the main container and its children
-            entry.target.classList.add('animate-in');
-            entry.target.querySelectorAll('.animate-on-scroll').forEach((el, index) => {
-              setTimeout(() => {
-                el.classList.add('animate-in');
-              }, index * 200); // Stagger the animations
+            // Add animation classes with enhanced timing
+            requestAnimationFrame(() => {
+              entry.target.classList.add('animate-in');
+              
+              // Animate text elements
+              entry.target.querySelectorAll('.animate-text').forEach((el, index) => {
+                setTimeout(() => {
+                  el.classList.add('animate-in');
+                }, index * 150);
+              });
+
+              // Animate images with a slight delay
+              entry.target.querySelectorAll('.animate-image').forEach((el) => {
+                setTimeout(() => {
+                  el.classList.add('animate-in');
+                }, 200);
+              });
+
+              // Animate list items with staggered timing
+              entry.target.querySelectorAll('.animate-list-item').forEach((el, index) => {
+                setTimeout(() => {
+                  el.classList.add('animate-in');
+                }, 300 + (index * 100));
+              });
             });
           }
         });
       },
       {
-        threshold: 0.2,
-        rootMargin: '-50px'
+        threshold: 0.15,
+        rootMargin: '-50px 0px -50px 0px'
       }
     );
 
@@ -79,20 +97,20 @@ export function StartWindow() {
       >
         <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
           <div className="space-y-6">
-            <h2 className="animate-on-scroll text-3xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+            <h2 className="animate-text text-3xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
               What is UNI AI?
             </h2>
-            <p className="animate-on-scroll delay-200 text-lg text-gray-700 leading-relaxed">
+            <p className="animate-text delay-200 text-lg text-gray-700 leading-relaxed">
               UNI AI is your 24/7 intelligent assistant designed specifically for university students. 
               It provides instant, accurate answers to your questions about scholarships, 
               Erasmus programs, application procedures, and university policies.
             </p>
           </div>
-          <div className="animate-on-scroll delay-400">
+          <div className="animate-image delay-300">
             <img 
               src="https://images.pexels.com/photos/4050315/pexels-photo-4050315.jpeg"
               alt="Student using laptop"
-              className="rounded-lg shadow-xl"
+              className="rounded-lg shadow-xl transform transition-transform duration-700 hover:scale-105"
             />
           </div>
         </div>
@@ -104,15 +122,15 @@ export function StartWindow() {
         className="min-h-screen flex items-center px-4 py-16 bg-gradient-to-br from-blue-50 via-white to-indigo-50"
       >
         <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-          <div className="order-2 md:order-1 animate-on-scroll">
+          <div className="order-2 md:order-1 animate-image">
             <img 
               src="https://images.pexels.com/photos/5905709/pexels-photo-5905709.jpeg"
               alt="Students collaborating"
-              className="rounded-lg shadow-xl"
+              className="rounded-lg shadow-xl transform transition-transform duration-700 hover:scale-105"
             />
           </div>
           <div className="order-1 md:order-2 space-y-6">
-            <h2 className="animate-on-scroll text-3xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+            <h2 className="animate-text text-3xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
               Why use UNI AI?
             </h2>
             <ul className="space-y-4">
@@ -124,7 +142,7 @@ export function StartWindow() {
               ].map((text, index) => (
                 <li 
                   key={index}
-                  className={`animate-on-scroll delay-${(index + 1) * 200} flex items-start text-lg text-gray-700`}
+                  className="animate-list-item flex items-start text-lg text-gray-700"
                 >
                   <span className="mr-2">•</span>
                   <span>{text}</span>
@@ -141,14 +159,14 @@ export function StartWindow() {
         className="min-h-screen flex items-center px-4 py-16"
       >
         <div className="max-w-6xl mx-auto">
-          <h2 className="animate-on-scroll text-3xl font-bold mb-12 text-center bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+          <h2 className="animate-text text-3xl font-bold mb-12 text-center bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
             See UNI AI in Action
           </h2>
-          <div className="animate-on-scroll delay-200">
+          <div className="animate-image delay-200">
             <img 
               src="https://images.pexels.com/photos/8199562/pexels-photo-8199562.jpeg"
               alt="UNI AI Interface"
-              className="rounded-lg shadow-2xl mx-auto"
+              className="rounded-lg shadow-2xl mx-auto transform transition-transform duration-700 hover:scale-105"
             />
           </div>
         </div>
