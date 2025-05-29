@@ -6,6 +6,8 @@ import { Card } from "@/components/ui/card";
 import { n8nService } from "@/utils/n8nService";
 import { useToast } from "@/hooks/use-toast";
 import N8nConfigDialog from "@/components/N8nConfigDialog";
+import { useAuth } from "@/components/auth/AuthContext";
+import { Navigate } from "react-router-dom";
 
 interface Message {
   id: string;
@@ -21,6 +23,12 @@ interface FAQ {
 }
 
 export function ChatWindow() {
+  const { user } = useAuth();
+  
+  if (!user) {
+    return <Navigate to="/" replace />;
+  }
+
   const [messages, setMessages] = useState<Message[]>([
     {
       id: "welcome",
