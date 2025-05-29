@@ -21,9 +21,9 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
         </DialogHeader>
         
         {mode === 'login' ? (
-          <LoginForm onModeChange={() => setMode('signup')} />
+          <LoginForm onModeChange={() => setMode('signup')} onClose={onClose} />
         ) : (
-          <SignUpForm onModeChange={() => setMode('login')} />
+          <SignUpForm onModeChange={() => setMode('login')} onClose={onClose} />
         )}
       </DialogContent>
     </Dialog>

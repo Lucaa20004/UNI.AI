@@ -1,33 +1,42 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { supabase } from '@/lib/supabase';
 import { useToast } from '@/hooks/use-toast';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 
-export function LoginForm({ onModeChange }: { onModeChange: () => void }) {
+export function LoginForm({ onModeChange, onClose }: { onModeChange: () => void, onClose: () => void }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
+    setError(null);
 
     try {
-      const { error } = await supabase.auth.signInWithPassword({
+      const { error: signInError } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
 
-      if (error) throw error;
+      if (signInError) throw signInError;
 
       toast({
         title: "Success",
         description: "Logged in successfully",
       });
+      
+      onClose(); // Close the auth modal
+      navigate('/chat'); // Navigate to chat window
     } catch (error: any) {
+      setError(error.message);
       toast({
         title: "Error",
         description: error.message,
@@ -40,6 +49,12 @@ export function LoginForm({ onModeChange }: { onModeChange: () => void }) {
 
   return (
     <form onSubmit={handleLogin} className="space-y-4 mt-4">
+      {error && (
+        <Alert variant="destructive">
+          <AlertDescription>{error}</AlertDescription>
+        </Alert>
+      )}
+      
       <div className="space-y-2">
         <Label htmlFor="email">Email</Label>
         <Input
