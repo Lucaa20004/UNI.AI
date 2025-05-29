@@ -11,7 +11,7 @@ import { Navigate } from "react-router-dom";
 
 interface Profile {
   id: string;
-  username: string | null;
+  full_name: string | null;
   role: string | null;
   created_at: string;
 }
@@ -22,7 +22,7 @@ export function ProfileWindow() {
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
-  const [username, setUsername] = useState("");
+  const [fullName, setFullName] = useState("");
   const { toast } = useToast();
 
   useEffect(() => {
@@ -41,7 +41,7 @@ export function ProfileWindow() {
 
         if (error) throw error;
         setProfile(data);
-        setUsername(data?.username || "");
+        setFullName(data?.full_name || "");
       } catch (error) {
         console.error('Error fetching profile:', error);
         toast({
@@ -64,7 +64,7 @@ export function ProfileWindow() {
       const { error } = await supabase
         .from('profiles')
         .update({
-          username: username,
+          full_name: fullName,
           updated_at: new Date().toISOString()
         })
         .eq('id', user.id);
@@ -153,11 +153,11 @@ export function ProfileWindow() {
           {isEditing ? (
             <div className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="username">Username</Label>
+                <Label htmlFor="fullName">Full Name</Label>
                 <Input
-                  id="username"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
+                  id="fullName"
+                  value={fullName}
+                  onChange={(e) => setFullName(e.target.value)}
                 />
               </div>
 
@@ -169,7 +169,7 @@ export function ProfileWindow() {
                   variant="outline" 
                   onClick={() => {
                     setIsEditing(false);
-                    setUsername(profile?.username || "");
+                    setFullName(profile?.full_name || "");
                   }}
                 >
                   Cancel
@@ -179,8 +179,8 @@ export function ProfileWindow() {
           ) : (
             <>
               <div className="space-y-2">
-                <Label>Username</Label>
-                <p className="text-sm">{profile?.username || 'Not set'}</p>
+                <Label>Full Name</Label>
+                <p className="text-sm">{profile?.full_name || 'Not set'}</p>
               </div>
 
               <div className="space-y-2">
